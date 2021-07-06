@@ -7,11 +7,11 @@ namespace NumberGuessingGame.Tests
     [TestClass]
     public class GameTests
     {
-        private readonly Game.Game _target;
+        private readonly Core.GameStorage _target;
 
         public GameTests()
         {
-            _target = new Game.Game();
+            _target = new Core.GameStorage();
         }
 
         [TestMethod]

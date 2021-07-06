@@ -1,16 +1,15 @@
-﻿using System;
+﻿using NumberGuessingGame.Game;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace NumberGuessingGame.Game
+namespace NumberGuessingGame.Core
 {
-    public class Game
+    public class GameStorage
     {
         private readonly List<int> _numbers = new();
         private readonly Random _rndNumber = new();
 
-        public Game()
+        public GameStorage()
         {
             NumberToGues = GenerateRandomNumber();
         }
