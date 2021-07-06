@@ -1,49 +1,26 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
-using System.Linq;
+using NumberGuessingGame.Core;
 
 namespace NumberGuessingGame.Tests
 {
     [TestClass]
     public class GameTests
     {
-        private readonly Core.GameStorage _target;
+        private readonly GameStorage _target;
 
         public GameTests()
         {
-            _target = new Core.GameStorage();
-        }
-
-        [TestMethod]
-        public void GenerateRandomNumber_IsUniqueDigits_ReturnTrue()
-        {
-            // Arrange
-            bool expectedIsUniqueDigits = true;
-
-            // Act
-            string returnedString = _target.NumberToGues;
-            string[] numStringArray = returnedString.Split();
-            List<int> numIntList = new();
-
-            for (int i = 0; i < numStringArray.Length; i++)
-            {
-                numIntList.Add(int.Parse(numStringArray[i]));
-            }
-
-            bool returnedIsUniqueDigits = numIntList.Distinct().Count() == numStringArray.Length;
-
-            // Assert
-            Assert.AreEqual(expectedIsUniqueDigits, returnedIsUniqueDigits);
+            _target = new GameStorage();
         }
 
         [TestMethod]
         public void IsNumber_StringOfCharactersAndNumbersGiven_ReturnsFalse()
         {
             // Arrange
-            var input = "e_R3";
+            const string input = "e_R3";
 
             // Act
-            var returned = _target.IsNumber(input);
+            var returned = _target.IsValidNumberInput(input);
 
             // Assert
             Assert.AreEqual(false, returned);
@@ -53,10 +30,10 @@ namespace NumberGuessingGame.Tests
         public void IsNumber_NumberLongerThanFourDigitsGiven_ReturnsFalse()
         {
             // Arrange
-            var input = "12345";
+            const string input = "12345";
 
             // Act
-            var returned = _target.IsNumber(input);
+            var returned = _target.IsValidNumberInput(input);
 
             // Assert
             Assert.AreEqual(false, returned);
@@ -66,35 +43,38 @@ namespace NumberGuessingGame.Tests
         public void IsNumber_StringOfNumbersGiven_ReturnsTrue()
         {
             // Arrange
-            var input = "1234";
+            const string input = "1234";
 
             // Act
-            var returned = _target.IsNumber(input);
+            var returned = _target.IsValidNumberInput(input);
 
             // Assert
             Assert.AreEqual(true, returned);
         }
 
-        [TestMethod]
+        /*[TestMethod]
         public void IsWinner_NumberStringGiven_ReturnsFalse()
         {
             // Arrange
-            var userInput = "1234";
+            const string userInput = "1234";
 
             // Act
             var returned = _target.IsWinner(userInput);
-        }
+            
+            // Assert
+            Assert.AreEqual(false, returned);
+        }*/
 
         [TestMethod]
         public void GetResult_UserInputGiven_ReturnsIsResult()
         {
             // Arrange
-            var userInput = "1234";
+            const string userInput = "1234";
 
             // Act
             var returnedResult = _target.GetResult(userInput);
 
-            bool isTypeOfResult = returnedResult is Game.Result;
+            var isTypeOfResult = returnedResult is TryResult;
 
             // Assert
             Assert.AreEqual(true, isTypeOfResult);
