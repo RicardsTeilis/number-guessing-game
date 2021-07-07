@@ -1,5 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NumberGuessingGame.Core;
+using NumberGuessingGame.Core.Game;
+using NumberGuessingGame.Core.Player;
 
 namespace NumberGuessingGame.Tests
 {
@@ -52,29 +54,33 @@ namespace NumberGuessingGame.Tests
             Assert.AreEqual(true, returned);
         }
 
-        /*[TestMethod]
-        public void IsWinner_NumberStringGiven_ReturnsFalse()
+        [TestMethod]
+        public void StartGame_PlayerGiven_ReturnsCurrentGame()
         {
             // Arrange
-            const string userInput = "1234";
-
+            var player = new Player{ Name = "John" };
+            
             // Act
-            var returned = _target.IsWinner(userInput);
+            var returned = _target.StartGame(player);
+            
+            var isTypeOfResult = returned is Game;
             
             // Assert
-            Assert.AreEqual(false, returned);
-        }*/
+            Assert.AreEqual(true, isTypeOfResult);
+        }
 
         [TestMethod]
-        public void GetResult_UserInputGiven_ReturnsIsResult()
+        public void SetMoveReturnCurrentGame_UserInputGiven_ReturnsCurrentGame()
         {
             // Arrange
             const string userInput = "1234";
 
             // Act
-            var returnedResult = _target.GetResult(userInput);
+            _target.StartGame(new Player{ Name = "John" });
+            
+            var returnedResult = _target.SetMoveReturnCurrentGame(userInput);
 
-            var isTypeOfResult = returnedResult is TryResult;
+            var isTypeOfResult = returnedResult is Game;
 
             // Assert
             Assert.AreEqual(true, isTypeOfResult);

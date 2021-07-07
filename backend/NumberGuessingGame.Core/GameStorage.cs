@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NumberGuessingGame.Core
 {
@@ -9,9 +10,9 @@ namespace NumberGuessingGame.Core
         private readonly Random _rndNumber = new();
         private Game.Game _game;
 
-        public Game.Game StartGame(string playerName)
+        public Game.Game StartGame(Player.Player player)
         {
-            _game = new Game.Game(GenerateRandomNumber(), new Player.Player{ Name = "John" });
+            _game = new Game.Game(GenerateRandomNumber(), new Player.Player{ Name = player.Name });
 
             return _game;
         }
@@ -21,7 +22,7 @@ namespace NumberGuessingGame.Core
             return int.TryParse(input, out var inputNumber) && inputNumber.ToString().Length == 4;
         }
 
-        public Game.Game CurrentGame(string userInput)
+        public Game.Game SetMoveReturnCurrentGame(string userInput)
         {
             var splitRandomNumber = _game.NumberToGuess.ToCharArray();
             var splitUserInput = userInput.ToCharArray();
@@ -39,11 +40,24 @@ namespace NumberGuessingGame.Core
                 }
             }
 
-            _game.Tries++;
+            var isWinner = IsWinner();
 
-            if (IsWinner())
+            if (isWinner)
             {
                 _game.Won = true;
+                _game.GameEnded = true;
+                
+                EndGame(_game);
+            }
+
+            _game.Tries++;
+
+            if (_game.Tries == 8 && !isWinner)
+            {
+                _game.Won = false;
+                _game.GameEnded = true;
+                
+                EndGame(_game);
             }
 
             return _game;
@@ -72,31 +86,9 @@ namespace NumberGuessingGame.Core
             return string.Join("", _numbers);
         }
 
-        /*public bool IsWinner(string userInput)
+        private void EndGame(Game.Game game)
         {
-            return _game.NumberToGuess == userInput;
-        }*/
-
-        /*public TryResult GetResult(string userInput)
-        {
-            var splitRandomNumber = _game.NumberToGuess.ToCharArray();
-            var splitUserInput = userInput.ToCharArray();
-
-            var result = new TryResult();
-
-            for (var i = 0; i < _game.NumberToGuess.Length; i++)
-            {
-                if (_game.NumberToGuess.Contains(splitUserInput[i]))
-                {
-                    result.IsInList++;
-                }
-                if (splitRandomNumber[i] == splitUserInput[i])
-                {
-                    result.IsInCorrectPlace++;
-                }
-            }
-
-            return result;
-        }*/
+            PlayerStorage.AddPlayerScore(game);
+        }
     }
 }
