@@ -7,7 +7,7 @@ namespace NumberGuessingGame.Core
     {
         internal static List<Player.Player> Leaderboard;
 
-        public List<Player.Player> CreateLeaderboard()
+        public static List<Player.Player> CreateLeaderboard()
         {
             Leaderboard = new List<Player.Player>();
 
