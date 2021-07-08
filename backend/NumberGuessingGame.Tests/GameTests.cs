@@ -61,7 +61,7 @@ namespace NumberGuessingGame.Tests
             var player = new Player{ Name = "John" };
             
             // Act
-            var returned = _target.StartGame(player);
+            var returned = GameStorage.StartGame(player);
             
             var isTypeOfResult = returned is Game;
             
@@ -76,7 +76,7 @@ namespace NumberGuessingGame.Tests
             const string userInput = "1234";
 
             // Act
-            _target.StartGame(new Player{ Name = "John" });
+            GameStorage.StartGame(new Player{ Name = "John" });
             
             var returnedResult = _target.SetMoveReturnCurrentGame(userInput);
 

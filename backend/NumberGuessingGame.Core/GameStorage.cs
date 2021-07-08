@@ -6,11 +6,11 @@ namespace NumberGuessingGame.Core
 {
     public class GameStorage
     {
-        private readonly List<int> _numbers = new();
-        private readonly Random _rndNumber = new();
-        private Game.Game _game;
+        private static readonly List<int> _numbers = new();
+        private static readonly Random _rndNumber = new();
+        private static Game.Game _game;
 
-        public Game.Game StartGame(Player.Player player)
+        public static Game.Game StartGame(Player.Player player)
         {
             _game = new Game.Game(GenerateRandomNumber(), new Player.Player{ Name = player.Name });
 
@@ -68,7 +68,7 @@ namespace NumberGuessingGame.Core
             return _game.DigitsInCorrectPlaces == 4;
         }
 
-        private string GenerateRandomNumber()
+        private static string GenerateRandomNumber()
         {
             var count = 0;
 
