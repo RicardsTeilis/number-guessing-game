@@ -17,7 +17,7 @@ namespace NumberGuessingGame.Controllers
         {
             _gameSession = new GameSession();
             
-            return Ok();
+            return Ok(_gameSession.ReturnLeaderboard());
         }
 
         [HttpGet]
