@@ -7,66 +7,68 @@ using NumberGuessingGame.Core.Player;
 namespace NumberGuessingGame.Controllers
 {
     [ApiController]
-    [Route("numberGuessingGame")]
+    [Route("")]
     public class GameController : ControllerBase
     {
         private GameSession _gameSession;
         
         [HttpGet]
+        [Route("startSession")]
         public ActionResult<List<Player>> CreateNewGameSessionRequest()
         {
             _gameSession = new GameSession();
-            
-            return Ok(_gameSession.ReturnLeaderboard());
+            return Ok(GameSession.ReturnLeaderboard());
         }
 
         [HttpGet]
         [Route("leaderboard")]
         public ActionResult<List<Player>> ReturnLeaderBoardRequest()
         {
-            return _gameSession.ReturnLeaderboard();
+            return GameSession.ReturnLeaderboard();
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route("player")]
         public ActionResult<Player> CreateNewPlayerRequest(string name)
         {
-            var isValidPlayerName = _gameSession.IsValidPlayerName(name);
+            var isValidPlayerName = GameSession.IsValidPlayerName(name);
 
             if (!isValidPlayerName)
             {
                 return BadRequest("The name cannot be empty");
             }
             
-            return Created("",_gameSession.CreateNewPlayer(name)) ;
+            return Created("",GameSession.CreateNewPlayer(name)) ;
         }
 
         [HttpGet]
         [Route("player/{id:int}")]
         public ActionResult<Player> GetPlayerByIdRequest(int id)
         {
-            var player = _gameSession.GetPlayerById(id);
+            var player = GameSession.GetPlayerById(id);
 
             if (player == null)
             {
-                return NotFound();
+                return NotFound("No such player");
             }
 
             return player;
         }
 
         [HttpGet]
-        [Route("game")]
-        public IActionResult StartGameRequest(Player player)
+        [Route("game/{id:int}")]
+        public IActionResult StartGameRequest(int id)
         {
-            var game = GameLogic.StartGame(player);
-
-            if (game == null)
-            {
-                return BadRequest("The number has to contain only four digits");
-            }
+            var game = GameLogic.StartGame(id);
 
             return Created("", game);
+        }
+
+        [HttpGet]
+        [Route("game/getGame")]
+        public Game GetGame()
+        {
+            return GameLogic.ReturnGame();
         }
 
         [HttpPost]

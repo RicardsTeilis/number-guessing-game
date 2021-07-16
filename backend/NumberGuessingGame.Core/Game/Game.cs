@@ -2,8 +2,9 @@
 {
     public class Game
     {
+        public int GameId { get; set; }
         public string NumberToGuess { get; set; }
-        public string PlayerName;
+        public int PlayerId { get; set; }
         public bool Won { get; set; }
         public int Tries { get; set; }
         public int DigitsGuessed { get; set; }

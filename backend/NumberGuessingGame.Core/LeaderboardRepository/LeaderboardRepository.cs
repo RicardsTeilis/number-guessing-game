@@ -11,18 +11,7 @@ namespace NumberGuessingGame.Core.LeaderboardRepository
 
         public LeaderboardRepository()
         {
-            _playerId = 0;
-            _leaderboard = new List<Player.Player>
-            {
-                new Player.Player
-                {
-                    Id = 1,
-                    Name = "John",
-                    GamesPlayed = new List<Game.Game>(),
-                    GamesWon = 0,
-                    TotalTries = 0
-                }
-            };
+            _leaderboard = new List<Player.Player>();
         }
         
         public Player.Player Create(string name)

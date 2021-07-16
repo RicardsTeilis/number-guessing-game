@@ -9,16 +9,19 @@ namespace NumberGuessingGame.Core.Game
     {
         private static readonly Random RndNumber = new();
         private static Game _game;
+        private static int _gameId;
         private static string _numberToGuess;
 
-        public static Game StartGame(Player.Player player)
+        public static Game StartGame(int id)
         {
+            _gameId++;
             _numberToGuess = GenerateRandomNumber();
                 
             _game = new Game
             {
+                GameId = _gameId,
                 NumberToGuess = _numberToGuess,
-                PlayerName = player.Name,
+                PlayerId = id,
                 Won = false,
                 Tries = 0,
                 DigitsGuessed = 0,
@@ -61,6 +64,11 @@ namespace NumberGuessingGame.Core.Game
             }
 
             return !notIntFlag && !longerThanFourDigits;
+        }
+
+        public static Game ReturnGame()
+        {
+            return _game;
         }
 
         public static Game SetMoveReturnCurrentGame(string userInput)
