@@ -9,6 +9,10 @@ import { useEffect, useState, createContext } from 'react';
 
 export const GameContext = createContext();
 
+// window.onbeforeunload = function () {
+//   localStorage.clear();
+// }
+
 function App() {
   const [inputValue, setInputValue] = useState('');
   const [player, setPlayer] = useState();

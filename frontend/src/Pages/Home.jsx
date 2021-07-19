@@ -36,13 +36,19 @@ const Home = () => {
         <>
             <h1>Number guessing game</h1>
 
+            <div className="container">
+                <p>
+                    Program chooses a random secret number with 4 digits. All digits in the secret number are different. You have 8 tries to guess the secret number.
+                </p>
+            </div>
+
             <div className='form__form--wrapper'>
                 <form onSubmit={(event) => {
                     event.preventDefault();
                     sendNewPlayer(inputValue);
                 }}>
 
-                    <input type="text" placeholder='Name' className='form__form--input-text'
+                    <input type="text" placeholder='Your name...' className='form__form--input-text'
                         value={inputValue}
                         onChange={(event) => {
                             const inputValue = event.target.value;

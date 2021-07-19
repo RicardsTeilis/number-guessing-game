@@ -1,15 +1,18 @@
 import axios from 'axios';
-import { useEffect, useContext, useState } from 'react';
-import { GameContext } from "../App";
+import { useEffect, useState } from 'react';
 import History from "../History";
 import Button from '../Components/Button/Button';
 
 const Leaderboard = () => {
-    const { player, setGame } = useContext(GameContext)
+
+    const player = JSON.parse(localStorage.getItem('player'));
+
+    const [inputValue, setInputValue] = useState('');
 
     const [newPlayerForm, setNewPlayerForm] = useState(false);
     const [buttonsVisible, setButtonsVisible] = useState(true);
     const [leaderboard, setLeaderboard] = useState([]);
+    const [newPlayer, setNewPlayer] = useState();
 
     useEffect(() => {
         axios.get('http://localhost:5000/leaderboard').then((response) => {
@@ -20,7 +23,7 @@ const Leaderboard = () => {
 
     const playAgain = () => {
         axios.get(`http://localhost:5000/game/${player.id}`).then((response) => {
-            setGame(response.data)
+            localStorage.setItem("game", JSON.stringify(response.data));
             History.push('/game')
         })
     }
@@ -30,23 +33,38 @@ const Leaderboard = () => {
         setButtonsVisible(false)
     }
 
+    const changePlayer = (input) => {
+        axios.post(`http://localhost:5000/player?name=${input}`)
+            .then((response) => {
+                setNewPlayer(response.data)
+                localStorage.setItem("player", JSON.stringify(response.data));
+            })
+    }
+
+    useEffect(() => {
+        if (newPlayer) {
+            axios.get(`http://localhost:5000/game/${newPlayer.id}`).then((response) => {
+                localStorage.setItem("game", JSON.stringify(response.data));
+                History.push('/game')
+            })
+        }
+    }, [newPlayer])
+
     return (
         <>
             <h1>Leaderboard</h1>
 
-            <div className='container'>
+            <div className='container leaderboard'>
 
                 {
                     buttonsVisible && (
                         <div className='form__form--wrapper'>
                             <Button text='Play again' type='button' onClick={playAgain} />
-                            <Button text='Change player' type='button' />
                             <Button text='New player' type='button' onClick={showNewPlayerForm} />
                         </div>
                     )
 
                 }
-
 
                 {
                     newPlayerForm && (
@@ -54,10 +72,14 @@ const Leaderboard = () => {
                         <div className='form__form--wrapper'>
                             <form onSubmit={(event) => {
                                 event.preventDefault();
-                                //sendNewPlayer(inputValue);
+                                changePlayer(inputValue);
                             }}>
-
-                                <input type="text" placeholder='Name' className='form__form--input-text' />
+                                <input type="text" placeholder='Name' className='form__form--input-text'
+                                    value={inputValue}
+                                    onChange={(event) => {
+                                        const inputValue = event.target.value;
+                                        setInputValue(inputValue);
+                                    }} />
 
                                 <Button text='Start Game' type='submit' />
                             </form>

@@ -1,33 +1,15 @@
-import React, { useContext, useEffect, useState } from "react";
-import { GameContext } from "../App";
+import React, { useEffect, useState } from "react";
 import History from "../History";
 import axios from "axios";
 import Button from "../Components/Button/Button";
 
 const Game = () => {
 
-    //const { game, setGame } = useContext(GameContext)
-
     const game = JSON.parse(localStorage.getItem('game'));
     const player = JSON.parse(localStorage.getItem('player'));
 
     const [guessInput, setGuessInput] = useState('');
-    //const [player, setPlayer] = useState();
     const [currentGame, setCurrentGame] = useState(game);
-
-    // const playerId = localStorage.getItem("playerId");
-    // console.log(playerId)
-
-    // useEffect(() => {
-    //     axios.get(`http://localhost:5000/player/${playerId}`)
-    //         .then((response) => {
-    //             console.log(response.data)
-    //             setPlayer(response.data)
-    //         })
-    //         .catch(error => {
-    //             alert(error.response.data)
-    //         })
-    // }, [])
 
     const sendGuess = (input) => {
 
@@ -42,15 +24,21 @@ const Game = () => {
             })
     }
 
-    useEffect(() => {
+    const goToLeaderBoard = () => {
         if (currentGame.gameEnded) {
             History.push('/leaderboard')
         }
-    }, [currentGame])
+    }
+
+    // useEffect(() => {
+    //     if (currentGame.gameEnded) {
+    //         History.push('/leaderboard')
+    //     }
+    // }, [currentGame])
 
     return (
         <>
-            <h3>Player: {player.name}</h3>
+            <h3>Player: <span className="strong">{player.name}</span></h3>
 
             {
                 !currentGame.gameEnded && (
@@ -73,24 +61,49 @@ const Game = () => {
                 )
             }
 
-            <div>
+            <div className="container result">
                 {currentGame && !currentGame.gameEnded && (
-                    <div>
-                        <div>Tries left: {8 - currentGame.tries}</div>
-                        <div>Digits guessed: {currentGame.digitsGuessed}</div>
-                        <div>Digits in correct places: {currentGame.digitsInCorrectPlaces}</div>
-                    </div>
+                    <>
+                        <div>Tries left: <span className="strong">{8 - currentGame.tries}</span></div>
+                        <div>Digits guessed: <span className="strong">{currentGame.digitsGuessed}</span></div>
+                        <div>Digits in correct places: <span className="strong">{currentGame.digitsInCorrectPlaces}</span></div>
+                    </>
 
-                )}
-
-                {currentGame.gameEnded && !currentGame.won && (
-                    <div>You lost</div>
-                )}
-
-                {currentGame.gameEnded && currentGame.won && (
-                    <div>You won</div>
                 )}
             </div>
+
+            {
+                currentGame.gameEnded && !currentGame.won && (
+                    <h2>You lost!</h2>
+                )
+            }
+
+            {
+                currentGame.gameEnded && currentGame.won && (
+                    <h2>You won!</h2>
+                )
+            }
+
+            {
+                currentGame && currentGame.gameEnded && (
+                    <>
+                        <div className="container d-block text-center">
+                            The number to guess was <span className="strong green">{currentGame.numberToGuess}</span>
+
+                            <div><Button text='Go to leaderboard' type='button' onClick={goToLeaderBoard} /></div>
+
+                        </div>
+
+                    </>
+                )
+            }
+
+            {
+                currentGame && !currentGame.gameEnded && currentGame.previousTries != "" && (
+                    <div className="container prevTries">
+                        <span className="strong">Previous tries:</span> {currentGame.previousTries?.join(", ")}
+                    </div>
+                )}
         </>
     )
 }

@@ -24,6 +24,7 @@ namespace NumberGuessingGame.Core.Game
                 PlayerId = id,
                 Won = false,
                 Tries = 0,
+                PreviousTries = new List<string>(),
                 DigitsGuessed = 0,
                 DigitsInCorrectPlaces = 0,
                 GameEnded = false
@@ -76,6 +77,8 @@ namespace NumberGuessingGame.Core.Game
             _game.DigitsInCorrectPlaces = 0;
             _game.DigitsGuessed = 0;
             
+            _game.PreviousTries.Add(userInput);
+            
             var splitRandomNumber = _numberToGuess.ToCharArray();
             var splitUserInput = userInput.ToCharArray();
 
@@ -98,6 +101,7 @@ namespace NumberGuessingGame.Core.Game
             {
                 _game.Won = true;
                 _game.GameEnded = true;
+                _game.Tries++;
                 
                 EndGame(_game);
             }
