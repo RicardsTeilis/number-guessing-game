@@ -38,6 +38,10 @@ h3 {
   color: yellowgreen;
 }
 
+.mt-15 {
+  margin-top: 15px;
+}
+
 .result div {
   margin: 10px;
 }
@@ -73,6 +77,11 @@ h3 {
   border: solid 1px silver;
   border-radius: 5px;
   transition: 0.4s;
+}
+
+.form__form--input-text.digit {
+  width: 40px;
+  text-align: center;
 }
 
 .form__form--input-text:focus {

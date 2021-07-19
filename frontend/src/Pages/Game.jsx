@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useRef } from "react";
 import History from "../History";
 import axios from "axios";
 import Button from "../Components/Button/Button";
@@ -11,9 +11,52 @@ const Game = () => {
     const [guessInput, setGuessInput] = useState('');
     const [currentGame, setCurrentGame] = useState(game);
 
-    const sendGuess = (input) => {
+    const guessForm = useRef()
 
-        axios.post(`http://localhost:5000/game?input=${input}`)
+    const [input, setInput] = useState({
+        inp1: '',
+        inp2: '',
+        inp3: '',
+        inp4: ''
+    })
+
+    const handleInputChange = (e) => {
+        const { maxLength, value, name } = e.target;
+        const [fieldName, fieldIndex] = name.split("-");
+
+        // Check if they hit the max character length
+        if (value.length >= maxLength) {
+            // Check if it's not the last input field
+            if (parseInt(fieldIndex, 10) < 4) {
+                // Get the next input field
+                const nextSibling = document.querySelector(
+                    `input[name=inp-${parseInt(fieldIndex, 10) + 1}]`
+                );
+
+                // If found, focus the next field
+                if (nextSibling !== null) {
+                    nextSibling.focus();
+                }
+            }
+        }
+
+        setInput({
+            ...input,
+            [`inp${fieldIndex}`]: value
+        });
+    }
+
+    const sendGuess = () => {
+
+        let inputToSend = ''
+
+        Object.values(input).forEach(i => {
+            inputToSend += i
+        })
+
+        console.log(JSON.stringify(inputToSend))
+
+        axios.post(`http://localhost:5000/game?input=${inputToSend}`)
             .then((response) => {
                 console.log(response.data)
                 setCurrentGame(response.data)
@@ -22,6 +65,13 @@ const Game = () => {
             .catch(error => {
                 alert(error.response.data)
             })
+
+        setInput({
+            inp1: '',
+            inp2: '',
+            inp3: '',
+            inp4: ''
+        })
     }
 
     const goToLeaderBoard = () => {
@@ -30,12 +80,6 @@ const Game = () => {
         }
     }
 
-    // useEffect(() => {
-    //     if (currentGame.gameEnded) {
-    //         History.push('/leaderboard')
-    //     }
-    // }, [currentGame])
-
     return (
         <>
             <h3>Player: <span className="strong">{player.name}</span></h3>
@@ -43,16 +87,14 @@ const Game = () => {
             {
                 !currentGame.gameEnded && (
                     <div className='form__form--wrapper'>
-                        <form onSubmit={(event) => {
+                        <form ref={guessForm} onSubmit={(event) => {
                             event.preventDefault();
                             sendGuess(guessInput);
                         }}>
-                            <input type="text" placeholder='Your guess' className='form__form--input-text'
-                                value={guessInput}
-                                onChange={(event) => {
-                                    const guessInput = event.target.value;
-                                    setGuessInput(guessInput);
-                                }} />
+                            <input type="text" className='form__form--input-text digit' name='inp-1' autoComplete='off' value={input.inp1} maxLength={1} onChange={handleInputChange} />
+                            <input type="text" className='form__form--input-text digit' name='inp-2' autoComplete='off' value={input.inp2} maxLength={1} onChange={handleInputChange} />
+                            <input type="text" className='form__form--input-text digit' name='inp-3' autoComplete='off' value={input.inp3} maxLength={1} onChange={handleInputChange} />
+                            <input type="text" className='form__form--input-text digit' name='inp-4' autoComplete='off' value={input.inp4} maxLength={1} onChange={handleInputChange} />
 
                             <Button text='Guess' type='submit' />
                         </form>
@@ -90,7 +132,7 @@ const Game = () => {
                         <div className="container d-block text-center">
                             The number to guess was <span className="strong green">{currentGame.numberToGuess}</span>
 
-                            <div><Button text='Go to leaderboard' type='button' onClick={goToLeaderBoard} /></div>
+                            <div className='mt-15'><Button text='Go to leaderboard' type='button' onClick={goToLeaderBoard} /></div>
 
                         </div>
 
@@ -99,7 +141,7 @@ const Game = () => {
             }
 
             {
-                currentGame && !currentGame.gameEnded && currentGame.previousTries != "" && (
+                currentGame && !currentGame.gameEnded && currentGame.previousTries !== "" && (
                     <div className="container prevTries">
                         <span className="strong">Previous tries:</span> {currentGame.previousTries?.join(", ")}
                     </div>

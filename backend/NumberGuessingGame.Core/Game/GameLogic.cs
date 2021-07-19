@@ -55,16 +55,16 @@ namespace NumberGuessingGame.Core.Game
 
         public static bool IsValidNumberInput(string input)
         {
-            var longerThanFourDigits = false;
+            var errorFlag = false;
 
             var notIntFlag = input.Any(c => !char.IsDigit(c));
 
-            if (input.Length > 4)
+            if (input.Length is > 4 or < 4)
             {
-                longerThanFourDigits = true;
+                errorFlag = true;
             }
 
-            return !notIntFlag && !longerThanFourDigits;
+            return !notIntFlag && !errorFlag;
         }
 
         public static Game ReturnGame()
