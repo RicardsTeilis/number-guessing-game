@@ -2,13 +2,14 @@ import React, { useState, useRef } from "react";
 import History from "../History";
 import axios from "axios";
 import Button from "../Components/Button/Button";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Game = () => {
 
     const game = JSON.parse(localStorage.getItem('game'));
     const player = JSON.parse(localStorage.getItem('player'));
 
-    const [guessInput] = useState('');
     const [currentGame, setCurrentGame] = useState(game);
 
     const guessForm = useRef()
@@ -21,6 +22,7 @@ const Game = () => {
     })
 
     const handleInputChange = (e) => {
+
         const { maxLength, value, name } = e.target;
         const [fieldName, fieldIndex] = name.split("-");
 
@@ -48,11 +50,36 @@ const Game = () => {
 
         let inputToSend = ''
 
+        let hasErrors = false
+
         Object.values(input).forEach(i => {
-            inputToSend += i
+            if (i === '' || isNaN(i)) {
+                hasErrors = true
+            } else {
+                inputToSend += i
+            }
         })
 
-        console.log(JSON.stringify(inputToSend))
+        if (hasErrors) {
+            toast.error('The guess input cannot be empty and has to be a digit!', {
+                position: "top-center",
+                autoClose: 2500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+
+            setInput({
+                inp1: '',
+                inp2: '',
+                inp3: '',
+                inp4: ''
+            })
+
+            return
+        }
 
         axios.post(`http://localhost:5000/game?input=${inputToSend}`)
             .then((response) => {
@@ -80,6 +107,8 @@ const Game = () => {
 
     return (
         <>
+            <ToastContainer />
+
             <h3>Player: <span className="strong">{player.name}</span></h3>
 
             {
@@ -87,7 +116,7 @@ const Game = () => {
                     <div className='form__form--wrapper'>
                         <form ref={guessForm} onSubmit={(event) => {
                             event.preventDefault();
-                            sendGuess(guessInput);
+                            sendGuess();
                         }}>
                             <input type="text" className='form__form--input-text digit' name='inp-1' autoComplete='off' value={input.inp1} maxLength={1} onChange={handleInputChange} />
                             <input type="text" className='form__form--input-text digit' name='inp-2' autoComplete='off' value={input.inp2} maxLength={1} onChange={handleInputChange} />

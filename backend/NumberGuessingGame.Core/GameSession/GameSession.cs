@@ -13,14 +13,17 @@ namespace NumberGuessingGame.Core.GameSession
 
         public static bool IsValidPlayerName(string name)
         {
-            var trimmedName = name.Trim();
+            if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
+            {
+                return false;
+            }
             
-            return !string.IsNullOrEmpty(trimmedName);
+            return true;
         }
 
         public static Player.Player CreateNewPlayer(string name)
         {
-            return _leaderboard.Create(name);
+            return _leaderboard.Create(name.Trim());
         }
 
         public static Player.Player GetPlayerById(int id)

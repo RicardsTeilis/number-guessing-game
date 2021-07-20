@@ -2,6 +2,8 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import History from "../History";
 import Button from '../Components/Button/Button';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Leaderboard = () => {
 
@@ -43,6 +45,21 @@ const Leaderboard = () => {
     }
 
     const changePlayer = (input) => {
+        const trimmedInput = input.trim()
+
+        if (!trimmedInput) {
+            toast.error('The player name cannot be empty!', {
+                position: "top-center",
+                autoClose: 2500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+            return
+        }
+
         axios.post(`http://localhost:5000/player?name=${input}`)
             .then((response) => {
                 setNewPlayer(response.data)
@@ -61,6 +78,7 @@ const Leaderboard = () => {
 
     return (
         <>
+            <ToastContainer />
             <h1>Leaderboard</h1>
 
             <div className='container leaderboard'>

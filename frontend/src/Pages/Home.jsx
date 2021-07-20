@@ -3,6 +3,8 @@ import { GameContext } from "../App";
 import History from "../History";
 import axios from "axios";
 import Button from "../Components/Button/Button";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Home = () => {
 
@@ -15,10 +17,28 @@ const Home = () => {
     } = useContext(GameContext)
 
     const sendNewPlayer = (input) => {
+        const trimmedInput = input.trim()
+
+        if (!trimmedInput) {
+            toast.error('The player name cannot be empty!', {
+                position: "top-center",
+                autoClose: 2500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+            return
+        }
+
         axios.post(`http://localhost:5000/player?name=${input}`)
             .then((response) => {
                 setPlayer(response.data)
                 localStorage.setItem("player", JSON.stringify(response.data));
+            })
+            .catch(error => {
+                alert(error.response.data)
             })
     }
 
@@ -34,6 +54,8 @@ const Home = () => {
 
     return (
         <>
+            <ToastContainer />
+
             <h1>Number guessing game</h1>
 
             <div className="container">
