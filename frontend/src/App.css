@@ -96,3 +96,8 @@ td {
   border: solid 1px silver;
   padding: 2px;
 }
+
+.filter-wrapper {
+  margin-top: 15px;
+  font-size: smaller;
+}

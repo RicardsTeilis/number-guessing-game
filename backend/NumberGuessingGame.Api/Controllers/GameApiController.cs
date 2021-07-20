@@ -27,6 +27,13 @@ namespace NumberGuessingGame.Controllers
             return GameSession.ReturnLeaderboard();
         }
 
+        [HttpGet]
+        [Route("leaderboard/{filter:int}")]
+        public ActionResult<List<Player>> ReturnFilteredLeaderBoardRequest(int filter)
+        {
+            return GameSession.ReturnFilteredLeaderboard(filter);
+        }
+
         [HttpPost]
         [Route("player")]
         public ActionResult<Player> CreateNewPlayerRequest(string name)

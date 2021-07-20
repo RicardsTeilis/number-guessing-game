@@ -37,5 +37,10 @@ namespace NumberGuessingGame.Core.GameSession
         {
             return _leaderboard.GetAll();
         }
+
+        public static List<Player.Player> ReturnFilteredLeaderboard(int filter)
+        {
+            return _leaderboard.GetFilteredLeaderboard(filter);
+        }
     }
 }

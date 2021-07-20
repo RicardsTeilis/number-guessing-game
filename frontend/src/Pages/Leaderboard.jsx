@@ -9,10 +9,12 @@ const Leaderboard = () => {
 
     const [inputValue, setInputValue] = useState('');
 
+    const [filterCondition, setFilterCondition] = useState('');
+
     const [newPlayerForm, setNewPlayerForm] = useState(false);
     const [buttonsVisible, setButtonsVisible] = useState(true);
     const [leaderboard, setLeaderboard] = useState([]);
-    const [newPlayer, setNewPlayer] = useState();
+    const [newPlayer, setNewPlayer] = useState('');
 
     useEffect(() => {
         axios.get('http://localhost:5000/leaderboard').then((response) => {
@@ -20,6 +22,13 @@ const Leaderboard = () => {
             console.log(response.data)
         })
     }, [])
+
+    const getFilteredLeaderboard = (filterCondition) => {
+        axios.get(`http://localhost:5000/leaderboard/${filterCondition}`).then((response) => {
+            setLeaderboard(response.data)
+            console.log(response.data)
+        })
+    }
 
     const playAgain = () => {
         axios.get(`http://localhost:5000/game/${player.id}`).then((response) => {
@@ -74,7 +83,7 @@ const Leaderboard = () => {
                                 event.preventDefault();
                                 changePlayer(inputValue);
                             }}>
-                                <input type="text" placeholder='Name' className='form__form--input-text'
+                                <input type="text" autoFocus placeholder='Name' className='form__form--input-text'
                                     value={inputValue}
                                     onChange={(event) => {
                                         const inputValue = event.target.value;
@@ -113,6 +122,18 @@ const Leaderboard = () => {
                         </tbody>
                     </table>
                 }
+
+                <div className='filter-wrapper'>
+                    <form onSubmit={(event) => {
+                        event.preventDefault();
+                        getFilteredLeaderboard(filterCondition);
+                    }}>
+                        Filter player by at least <input type="text" className='form__form--input-text digit' value={filterCondition} onChange={(event) => {
+                            const inputValue = event.target.value;
+                            setFilterCondition(inputValue);
+                        }} /> games played <Button text='Filter' type='submit' />
+                    </form>
+                </div>
             </div>
         </>
     )

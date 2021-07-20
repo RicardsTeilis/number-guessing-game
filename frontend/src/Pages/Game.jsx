@@ -8,7 +8,7 @@ const Game = () => {
     const game = JSON.parse(localStorage.getItem('game'));
     const player = JSON.parse(localStorage.getItem('player'));
 
-    const [guessInput, setGuessInput] = useState('');
+    const [guessInput] = useState('');
     const [currentGame, setCurrentGame] = useState(game);
 
     const guessForm = useRef()
@@ -24,16 +24,14 @@ const Game = () => {
         const { maxLength, value, name } = e.target;
         const [fieldName, fieldIndex] = name.split("-");
 
-        // Check if they hit the max character length
         if (value.length >= maxLength) {
-            // Check if it's not the last input field
+
             if (parseInt(fieldIndex, 10) < 4) {
-                // Get the next input field
+
                 const nextSibling = document.querySelector(
-                    `input[name=inp-${parseInt(fieldIndex, 10) + 1}]`
+                    `input[name=${fieldName}-${parseInt(fieldIndex, 10) + 1}]`
                 );
 
-                // If found, focus the next field
                 if (nextSibling !== null) {
                     nextSibling.focus();
                 }

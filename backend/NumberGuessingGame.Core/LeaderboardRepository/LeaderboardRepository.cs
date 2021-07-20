@@ -49,7 +49,18 @@ namespace NumberGuessingGame.Core.LeaderboardRepository
 
         public List<Player.Player> GetAll()
         {
-            return _leaderboard;
+            var sortedLeaderboard = _leaderboard.OrderByDescending(i => i.GamesWon).ThenBy(i => i.TotalTries);
+            
+            return new List<Player.Player>(sortedLeaderboard);
+        }
+
+        public List<Player.Player> GetFilteredLeaderboard(int filter)
+        {
+            var sortedLeaderboard = GetAll();
+
+            var filteredLeaderboard = sortedLeaderboard.FindAll(p => p.GamesPlayed.Count >= filter);
+
+            return filteredLeaderboard;
         }
 
         public void Add(Game.Game game)
