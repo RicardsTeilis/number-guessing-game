@@ -25,7 +25,7 @@ namespace NumberGuessingGame
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddCors();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -42,6 +42,14 @@ namespace NumberGuessingGame
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "NumberGuessingGame.Api v1"));
             }
+            
+            app.UseCors(builder =>
+            {
+                builder
+                    .WithOrigins("http://localhost:3000")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
 
             app.UseRouting();
 

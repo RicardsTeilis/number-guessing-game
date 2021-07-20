@@ -11,19 +11,22 @@ namespace NumberGuessingGame.Core.GameSession
             _leaderboard = new LeaderboardRepository.LeaderboardRepository();
         }
 
-        public bool IsValidPlayerName(string name)
+        public static bool IsValidPlayerName(string name)
         {
-            var trimmedName = name.Trim();
+            if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
+            {
+                return false;
+            }
             
-            return !string.IsNullOrEmpty(trimmedName);
+            return true;
         }
 
-        public Player.Player CreateNewPlayer(string name)
+        public static Player.Player CreateNewPlayer(string name)
         {
-            return _leaderboard.Create(name);
+            return _leaderboard.Create(name.Trim());
         }
 
-        public Player.Player GetPlayerById(int id)
+        public static Player.Player GetPlayerById(int id)
         {
             return _leaderboard.Get(id);
         }
@@ -33,9 +36,14 @@ namespace NumberGuessingGame.Core.GameSession
             _leaderboard.Add(game);
         }
 
-        public List<Player.Player> ReturnLeaderboard()
+        public static List<Player.Player> ReturnLeaderboard()
         {
             return _leaderboard.GetAll();
+        }
+
+        public static List<Player.Player> ReturnFilteredLeaderboard(int filter)
+        {
+            return _leaderboard.GetFilteredLeaderboard(filter);
         }
     }
 }

@@ -1,0 +1,16 @@
+.button {
+    margin: 5px;
+    padding: 7px 20px;
+    min-width: 120px;
+    height: 30px;
+    background-color: coral;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.4s;
+}
+
+button:hover {
+    background-color: chocolate;
+}

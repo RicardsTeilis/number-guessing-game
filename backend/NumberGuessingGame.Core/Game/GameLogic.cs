@@ -9,18 +9,22 @@ namespace NumberGuessingGame.Core.Game
     {
         private static readonly Random RndNumber = new();
         private static Game _game;
+        private static int _gameId;
         private static string _numberToGuess;
 
-        public static Game StartGame(Player.Player player)
+        public static Game StartGame(int id)
         {
+            _gameId++;
             _numberToGuess = GenerateRandomNumber();
                 
             _game = new Game
             {
+                GameId = _gameId,
                 NumberToGuess = _numberToGuess,
-                PlayerName = player.Name,
+                PlayerId = id,
                 Won = false,
                 Tries = 0,
+                PreviousTries = new List<string>(),
                 DigitsGuessed = 0,
                 DigitsInCorrectPlaces = 0,
                 GameEnded = false
@@ -51,22 +55,29 @@ namespace NumberGuessingGame.Core.Game
 
         public static bool IsValidNumberInput(string input)
         {
-            var longerThanFourDigits = false;
+            var errorFlag = false;
 
             var notIntFlag = input.Any(c => !char.IsDigit(c));
 
-            if (input.Length > 4)
+            if (input.Length is > 4 or < 4)
             {
-                longerThanFourDigits = true;
+                errorFlag = true;
             }
 
-            return !notIntFlag && !longerThanFourDigits;
+            return !notIntFlag && !errorFlag;
+        }
+
+        public static Game ReturnGame()
+        {
+            return _game;
         }
 
         public static Game SetMoveReturnCurrentGame(string userInput)
         {
             _game.DigitsInCorrectPlaces = 0;
             _game.DigitsGuessed = 0;
+            
+            _game.PreviousTries.Add(userInput);
             
             var splitRandomNumber = _numberToGuess.ToCharArray();
             var splitUserInput = userInput.ToCharArray();
@@ -90,6 +101,7 @@ namespace NumberGuessingGame.Core.Game
             {
                 _game.Won = true;
                 _game.GameEnded = true;
+                _game.Tries++;
                 
                 EndGame(_game);
             }

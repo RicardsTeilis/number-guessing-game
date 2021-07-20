@@ -23,7 +23,7 @@ namespace NumberGuessingGame.Tests
             const string name = "John";
 
             // Act
-            var returned = _gameSession.IsValidPlayerName(name);
+            var returned = GameSession.IsValidPlayerName(name);
             
             // Assert
             Assert.AreEqual(true, returned);
@@ -36,7 +36,7 @@ namespace NumberGuessingGame.Tests
             const string name = " ";
 
             // Act
-            var returned = _gameSession.IsValidPlayerName(name);
+            var returned = GameSession.IsValidPlayerName(name);
             
             // Assert
             Assert.AreEqual(false, returned);
@@ -49,7 +49,7 @@ namespace NumberGuessingGame.Tests
             const string name = "";
 
             // Act
-            var returned = _gameSession.IsValidPlayerName(name);
+            var returned = GameSession.IsValidPlayerName(name);
             
             // Assert
             Assert.AreEqual(false, returned);
@@ -62,7 +62,7 @@ namespace NumberGuessingGame.Tests
             const string name = "John";
 
             // Act
-            var returned = _gameSession.CreateNewPlayer(name);
+            var returned = GameSession.CreateNewPlayer(name);
             var returnedName = returned.Name;
             
             // Assert
@@ -74,10 +74,10 @@ namespace NumberGuessingGame.Tests
         {
             // Arrange
             const int id = 1;
-            _gameSession.CreateNewPlayer("Philip");
+            GameSession.CreateNewPlayer("Philip");
             
             // Act
-            var returned = _gameSession.GetPlayerById(id);
+            var returned = GameSession.GetPlayerById(id);
             var returnedId = returned.Id;
             
             // Assert
@@ -89,10 +89,10 @@ namespace NumberGuessingGame.Tests
         {
             // Arrange
             const int id = 2;
-            _gameSession.CreateNewPlayer("Philip");
+            GameSession.CreateNewPlayer("Philip");
             
             // Act
-            var returned = _gameSession.GetPlayerById(id);
+            var returned = GameSession.GetPlayerById(id);
             
             // Assert
             Assert.AreEqual(null,returned);
