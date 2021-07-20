@@ -8,8 +8,6 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const Home = () => {
 
-    //localStorage.clear();
-
     const {
         inputValue, setInputValue,
         player, setPlayer,

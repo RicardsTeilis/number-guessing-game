@@ -21,14 +21,12 @@ const Leaderboard = () => {
     useEffect(() => {
         axios.get('http://localhost:5000/leaderboard').then((response) => {
             setLeaderboard(response.data)
-            console.log(response.data)
         })
     }, [])
 
     const getFilteredLeaderboard = (filterCondition) => {
         axios.get(`http://localhost:5000/leaderboard/${filterCondition}`).then((response) => {
             setLeaderboard(response.data)
-            console.log(response.data)
         })
     }
 

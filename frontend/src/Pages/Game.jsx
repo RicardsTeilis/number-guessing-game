@@ -83,7 +83,6 @@ const Game = () => {
 
         axios.post(`http://localhost:5000/game?input=${inputToSend}`)
             .then((response) => {
-                console.log(response.data)
                 setCurrentGame(response.data)
                 localStorage.setItem("game", JSON.stringify(response.data));
             })
